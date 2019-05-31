@@ -8,16 +8,19 @@ using System.Web.Mvc;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Xml;
-using WebApplication2.Models;
+using Ex3.Models;
 
-namespace WebApplication2.Controllers
+namespace Ex3.Controllers
 {
     public class FirstController : Controller
     {
+        private const string LON = "get /position/longitude-deg \r\n";
+        private const string LAT = "get /position/latitude-deg \r\n";
+        private const string THROTTLE = "get /controls/engines/current-engine/throttle \r\n";
+        private const string RUDDER = "get /controls/flight/rudder \r\n";
+        private const double ERROR = 404;
 
-        private static Random rnd = new Random();
-
-        // GET: First
+        // GET: First difult 
         public ActionResult Index()
         {
             return View();
@@ -27,10 +30,11 @@ namespace WebApplication2.Controllers
         [HttpGet]
         public ActionResult ShowLocation(string ip, int port)
         {
-            Client client = new Client();
-            client.Connect(port, ip);
-            ViewBag.Lon = client.Send("get /position/longitude-deg \r\n");
-            ViewBag.Lat = client.Send("get /position/latitude-deg \r\n");
+            Client client = new Client(); 
+            client.Connect(port, ip); // connect to the server of the plan.
+            // get the value of the place from the server. 
+            ViewBag.Lon = client.Send(LON);
+            ViewBag.Lat = client.Send(LAT);
             client.CLoseClient();
             return View();
         }
@@ -46,8 +50,8 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public string GetValues()
         {
-            double lon = InfoModel.Instance.Client.Send("get /position/longitude-deg \r\n");
-            double lat = InfoModel.Instance.Client.Send("get /position/latitude-deg \r\n");
+            double lon = InfoModel.Instance.Client.Send(LON);
+            double lat = InfoModel.Instance.Client.Send(LAT);
             return ToXml(lon, lat);
         }
 
@@ -60,7 +64,7 @@ namespace WebApplication2.Controllers
 
             writer.WriteStartDocument();
             writer.WriteStartElement("Value");
-
+            // the 2 value to pass 
             writer.WriteElementString("Lon", lon.ToString());
             writer.WriteElementString("Lat", lat.ToString());
 
@@ -82,27 +86,29 @@ namespace WebApplication2.Controllers
 
         public void saveInfo(string ip, int port, int rate)
         {
+            // Preserving the information in the model
             InfoModel.Instance.newClient();
             InfoModel.Instance.ip = ip;
             InfoModel.Instance.port = port.ToString();
             InfoModel.Instance.time = rate;
 
             InfoModel.Instance.Client.Connect(port, ip);
-
+            // save the data in the View
             Session["rate"] = rate;
-            ViewBag.Lon = InfoModel.Instance.Client.Send("get /position/longitude-deg \r\n");
-            ViewBag.Lat = InfoModel.Instance.Client.Send("get /position/latitude-deg \r\n");
+            ViewBag.Lon = InfoModel.Instance.Client.Send(LON);
+            ViewBag.Lat = InfoModel.Instance.Client.Send(LAT);
         }
 
 
         [HttpPost]
         public string GetValuesAndSave()
         {
-            double lon = InfoModel.Instance.Client.Send("get /position/longitude-deg \r\n");
-            double lat = InfoModel.Instance.Client.Send("get /position/latitude-deg \r\n");
-            double throttle = InfoModel.Instance.Client.Send("get /controls/engines/current-engine/throttle \r\n");
-            double rudder = InfoModel.Instance.Client.Send("get /controls/flight/rudder \r\n");
-            
+            // take param from the plan
+            double lon = InfoModel.Instance.Client.Send(LON);
+            double lat = InfoModel.Instance.Client.Send(LAT);
+            double throttle = InfoModel.Instance.Client.Send(THROTTLE);
+            double rudder = InfoModel.Instance.Client.Send(RUDDER);
+            // save them in xml to send the plan
             InfoModel.Instance.SaveData(lon, lat, throttle, rudder);
             return ToXml(lon, lat);
         }
@@ -121,9 +127,9 @@ namespace WebApplication2.Controllers
         public string GetLoadValues()
         {
             double lon = InfoModel.Instance.getNextValue();
-            if(lon == 404)
+            if(lon == ERROR) // error ther is no more data in the 
             {
-                return ToXml(404, 404);
+                return ToXml(ERROR, ERROR);
             }
             double lat = InfoModel.Instance.getNextValue();
             InfoModel.Instance.getNextValue();

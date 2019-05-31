@@ -178,11 +178,6 @@
     <Content Include="scripts\jquery-3.0.0.min.map" />
     <Content Include="scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="Views\First\ShowRoute.cshtml" />
-    <Content Include="Views\Db\Create.cshtml" />
-    <Content Include="Views\Db\Delete.cshtml" />
-    <Content Include="Views\Db\Details.cshtml" />
-    <Content Include="Views\Db\Edit.cshtml" />
-    <Content Include="Views\Db\Index.cshtml" />
     <Content Include="Views\First\ShowLocation.cshtml" />
     <Content Include="Views\First\Save.cshtml" />
     <Content Include="Views\First\LoadFile.cshtml" />

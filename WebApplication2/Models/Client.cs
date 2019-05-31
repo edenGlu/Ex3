@@ -9,8 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebApplication2.Models
+namespace Ex3.Models
 {
+    // connect to the server and responsible for sending and receiving messages from him
     public class Client
     {
         
@@ -24,13 +25,13 @@ namespace WebApplication2.Models
         public void Connect(int port, string ip)
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
-            client = new TcpClient();
+            client = new TcpClient(); // cread new TCP in evry connect
             client.Connect(ep);
             stream = client.GetStream();
             writer = new BinaryWriter(stream);
             reader = new BinaryReader(stream);
         }
-        // send the msg to the simulator 
+        // send the msg to the simulator and get the comment
         public double Send(string msg)
         {
             byte[] b = Encoding.ASCII.GetBytes(msg);

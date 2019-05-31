@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace WebApplication2
+namespace Ex3
 {
     public class RouteConfig
     {
@@ -19,7 +19,8 @@ namespace WebApplication2
                 "ShowLocation",
                 "display/{ip}/{port}",
                 new { controller = "First", action = "ShowLocation" }, 
-                new {ip = @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b" , port = @"\d{4}"}
+                new {ip = @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"}
+                // Check if this is a valid address ip
             );
 
             routes.MapRoute("ShowRoute", "display/{ip}/{port}/{rate}",
