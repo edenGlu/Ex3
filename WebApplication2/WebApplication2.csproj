@@ -136,6 +136,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="imgs\export-map-share.png" />
+    <Content Include="scripts\Action.js" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="scripts\bootstrap.js" />

@@ -15,23 +15,14 @@
             margin: 0;
         }
     </style>
+    <script src="~/scripts/Action.js"></script>
 </head>
 <body style="background-image: url('/imgs/export-map-share.png'); background-size:cover;">
     <canvas id="myCanvas" style='position:absolute; left:0px; top:0px;'></canvas>
     <script>
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext('2d');
-        ctx.canvas.width = window.innerWidth;
-        ctx.canvas.height = window.innerHeight;
-        var y = (window.innerHeight / 180) * (parseInt('@ViewBag.Lat') + 90);
-        var x = (window.innerWidth / 360) * (parseInt('@ViewBag.Lon') + 180);
-        ctx.fillStyle = "red"; //set the circle color to red
-
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.stroke();
-
+        showPoint(ctx, '@ViewBag.Lon', '@ViewBag.Lat');
     </script>
 
     <div>

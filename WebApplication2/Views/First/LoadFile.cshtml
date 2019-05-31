@@ -34,7 +34,8 @@
                             $xml = $(xmlDoc),
                             lon = $xml.find("Lon").text();
                         lat = $xml.find("Lat").text();
-                        if (parseInt(lon) == 404) {
+                        if (parseInt(lon) == 404)
+                        {
                             clearInterval(intervalID);
                         }
                         else {

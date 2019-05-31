@@ -14,7 +14,8 @@ namespace WebApplication2.Controllers
 {
     public class FirstController : Controller
     {
-        
+
+        private static Random rnd = new Random();
 
         // GET: First
         public ActionResult Index()
@@ -101,6 +102,7 @@ namespace WebApplication2.Controllers
             double lat = InfoModel.Instance.Client.Send("get /position/latitude-deg \r\n");
             double throttle = InfoModel.Instance.Client.Send("get /controls/engines/current-engine/throttle \r\n");
             double rudder = InfoModel.Instance.Client.Send("get /controls/flight/rudder \r\n");
+            
             InfoModel.Instance.SaveData(lon, lat, throttle, rudder);
             return ToXml(lon, lat);
         }
