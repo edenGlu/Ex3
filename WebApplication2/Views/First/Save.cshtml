@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Save";
+}
+
+<style>
+    html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+</style>
+<body style="background-image: url('/imgs/export-map-share.png'); background-size:cover;">
+    <div>
+        <canvas id="myCanvas" style='position:absolute; left:0px; top:0px;'></canvas>
+
+        <script>
+
+            var IntervalTime = @Session["rate"] * 1000;
+            var timeout = @Session["time"] * 1000;
+            var canvas = document.getElementById("myCanvas");
+            canvas.width = window.innerWidth;   //sets the canvas on whole page
+            canvas.height = window.innerHeight;
+            var ctx = canvas.getContext("2d");
+
+            var lat = parseInt('@ViewBag.Lat');
+            var lon = parseInt('@ViewBag.Lon');
+            y = (lat + 90) * (window.innerHeight / 180);
+            x = (lon + 180) * (window.innerWidth / 360);
+            ctx.fillStyle = "red"; //set the circle color to red
+
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            ctx.strokeStyle = "red";
+            
+            myTimer = (function () {
+                $.post("@Url.Action("GetValuesAndSave")").done(function (xml) {
+                    var xmlDoc = $.parseXML(xml),
+                        $xml = $(xmlDoc),
+                        lon = $xml.find("Lon").text();
+                    lat = $xml.find("Lat").text();
+
+                    var x = (window.innerWidth / 360) * (parseInt(lon) + 180);
+                    var y = (window.innerHeight / 180) * (parseInt(lat) + 90);
+
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+
+                });
+            });
+            
+            // setting the rate for printing the plain path.
+            var intervalID = setInterval(myTimer, IntervalTime);
+            // stop printing the plain path after 'duration' seconds.
+            setTimeout(function () { clearInterval(intervalID); }, timeout);
+            
+        </script>
+    </div>
+</body>
+

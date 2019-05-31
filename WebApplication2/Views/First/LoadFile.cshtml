@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "LoadFile";
+}
+
+<style>
+    html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+</style>
+<body style="background-image: url('/imgs/export-map-share.png'); background-size:cover;">
+    <h2>Roude</h2>
+    <div>
+        <canvas id="myCanvas" style='position:absolute; left:0px; top:0px;'></canvas>
+
+        <script>
+
+            var IntervalTime = @Session["rate"] * 1000;
+            var canvas = document.getElementById("myCanvas");
+            canvas.width = window.innerWidth;   //sets the canvas on whole page
+            canvas.height = window.innerHeight;
+            var ctx = canvas.getContext("2d");
+
+            ctx.strokeStyle = "red";
+            
+
+            function animation() {
+                var intervalID = setInterval(myTimer, IntervalTime);
+                function myTimer() {
+                    $.post("@Url.Action("GetLoadValues")").done(function (xml) {
+                        var xmlDoc = $.parseXML(xml),
+                            $xml = $(xmlDoc),
+                            lon = $xml.find("Lon").text();
+                        lat = $xml.find("Lat").text();
+                        if (parseInt(lon) == 404) {
+                            clearInterval(intervalID);
+                        }
+                        else {
+                            var x = (window.innerWidth / 360) * (parseInt(lon) + 180);
+                            var y = (window.innerHeight / 180) * (parseInt(lat) + 90);
+
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        }
+
+                    });
+                }
+            }
+
+            animation();
+            
+        </script>
+    </div>
+</body>
+
